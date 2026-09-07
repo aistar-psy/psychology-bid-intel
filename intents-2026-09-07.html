@@ -166,35 +166,9 @@
     <p class="note">词族 V1.3 升级：在词库 JSON 的 families[2].words（平台与系统词）和 families[6].words（风险与干预词）各追加以上 4 个词。已生效。</p>
   </section>
 
-  <!-- 扫描器架构 -->
-  <section>
-    <h2 class="sec">六、扫描器三层架构说明（生产环境）</h2>
-    <pre class="code">┌─────────────────────────────────────────────────────────────┐
-│ _tools/scan_intents_search.js                                │
-│   主路径：生成查询清单 + 主会话 WebSearch 执行              │
-│   优点：覆盖率最广，无 WAF 限流                            │
-│   缺点：依赖主会话联网能力                                  │
-└─────────────────────────────────────────────────────────────┘
-                              ↓ 降级
-┌─────────────────────────────────────────────────────────────┐
-│ _tools/scan_intents_browser.js                              │
-│   Playwright headless Chrome 路径                          │
-│   优点：能跑 JS challenge，可绕过部分 WAF                  │
-│   缺点：今日探测仍被 yangwangtong 拦截                     │
-└─────────────────────────────────────────────────────────────┘
-                              ↓ 降级
-┌─────────────────────────────────────────────────────────────┐
-│ _tools/scan_intents.py                                       │
-│   Python 标准库直连路径                                    │
-│   优点：免依赖                                              │
-│   缺点：必须已种下 acw_sc__v2 cookie，否则立即 403         │
-└─────────────────────────────────────────────────────────────┘</pre>
-    <div class="note">WAF 限制：cgyx.ccgp.gov.cn / ccgp-jiangxi.gov.cn / ccgp-hainan.gov.cn 均启用 DPTECH / 洋网通 WAF，POST 数据接口对非浏览器 cookie 强制 403；真实浏览器首次访问也无法自动获取 challenge cookie（疑似 IP 级临时封禁）。<b>生产环境推荐以 WebSearch 为主路径，直连仅作 fallback。</b></div>
-  </section>
-
   <!-- 本周动作 -->
   <section>
-    <h2 class="sec">七、本周主动作清单（与周报联动）</h2>
+    <h2 class="sec">六、本周主动作清单（与周报联动）</h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>主动作</th><th>责任</th><th>触发条件</th><th>期望时间</th></tr></thead>
